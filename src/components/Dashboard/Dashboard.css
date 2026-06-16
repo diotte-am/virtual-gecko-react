@@ -1,0 +1,46 @@
+.stats-dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    max-width: 500px;
+}
+
+.stat-card {
+    background: #f4f6f0;
+    border: 1px solid #d2dbcb;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #2e3830;
+    min-width: 100px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.stat-icon {
+    font-size: 1.1rem;
+}
+
+.stat-label {
+    font-weight: 500;
+}
+
+.stat-value {
+    margin-left: auto;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+/* Accent highlight colors for critical health and mood vitals */
+.highlight-health {
+    border-color: #f8b4b4;
+    background: #fff5f5;
+}
+
+.highlight-mood {
+    border-color: #bae6fd;
+    background: #f0f9ff;
+}
