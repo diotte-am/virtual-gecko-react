@@ -21,24 +21,40 @@
 
 .lizard-sprite {
     font-size: 2rem;
-    cursor: pointer;
+    cursor: grab;
     display: flex;
     flex-direction: column;
     align-items: center;
     animation: breathing 2s ease-in-out infinite;
+    user-select: none;
 }
 
+.lizard-sprite:active {
+    cursor: grabbing;
+}
+
+/* 1. Set tag invisible by default */
 .lizard-label {
+    position: absolute;
+    bottom: -15px;
     font-size: 0.7rem;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 2px 6px;
     border-radius: 4px;
-    margin-top: -4px;
     white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    z-index: 10;
+}
+
+/* 2. Reveal label smoothly when cursor hovers over wrapper */
+.lizard-sprite:hover .lizard-label {
+    opacity: 1;
 }
 
 @keyframes breathing {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
+    50% { transform: scale(1.06); }
 }

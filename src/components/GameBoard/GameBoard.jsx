@@ -1,23 +1,50 @@
-// src/components/GameBoard.jsx
 import React from 'react';
 import { GRID_SIZE } from '../../config/gameConfig';
-import './GameBoard.css'; // We'll add the styling next!
+import './GameBoard.css';
 
-export default function GameBoard({ position, petName }) {
-    const totalCells = GRID_SIZE * GRID_SIZE;
+export default function GameBoard({ position, petName, onMovePet }) {
     const cells = [];
 
-    // Build the 10x10 matrix layout grid (Rows 1-10, Columns 1-10)
+    // Drag Initialization Phase
+    const handleDragStart = (e) => {
+        e.dataTransfer.setData('text/plain', 'lizard'); 
+        // Changes drag image to look natural
+        e.dataTransfer.effectAllowed = 'move';
+    };
+
+    // Allow drops over these elements
+    const handleDragOver = (e) => {
+        e.preventDefault(); 
+    };
+
+    // Handle Drop Target Evaluation
+    const handleDrop = (e, targetX, targetY) => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData('text/plain');
+        if (data === 'lizard') {
+            onMovePet(targetX, targetY);
+        }
+    };
+
     for (let row = 1; row <= GRID_SIZE; row++) {
         for (let col = 1; col <= GRID_SIZE; col++) {
-            // Check if the lizard is sitting in this exact coordinate cell
             const hasLizard = position.x === col && position.y === row;
 
             cells.push(
-                <div key={`${col}-${row}`} className="grid-cell">
+                <div 
+                    key={`${col}-${row}`} 
+                    className="grid-cell"
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, col, row)}
+                >
                     {hasLizard && (
-                        <div className="lizard-sprite" title={petName}>
-                            🦎 <span className="lizard-label">{petName}</span>
+                        <div 
+                            className="lizard-sprite" 
+                            draggable
+                            onDragStart={handleDragStart}
+                        >
+                            🦎
+                            <span className="lizard-label">{petName}</span>
                         </div>
                     )}
                 </div>

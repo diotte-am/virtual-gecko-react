@@ -14,12 +14,13 @@ export default function App() {
 
     // Otherwise, render the main game viewport loop
     return (
-        <GameScreen 
-            petName={petName}
-            stats={stats}
-            position={position}
-            isAlive={isAlive}
-            onAction={handleAction}
-        />
-    );
+      <GameScreen 
+          petName={petName}
+          stats={stats}
+          position={position}
+          isAlive={isAlive}
+          onAction={handleAction}
+          onMovePet={movePet} // <-- Add this line
+      />
+  );
 }

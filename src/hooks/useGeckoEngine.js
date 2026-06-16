@@ -1,32 +1,40 @@
 import { useState, useEffect } from 'react';
-import { INITIAL_STATS, DECAY_RATES, GRID_SIZE } from '../config/gameConfig';
+import { INITIAL_STATS, DECAY_RATES, PENALTIES } from '../config/gameConfig';
 
 export function useGeckoEngine() {
-    // 1. Check localStorage for an existing pet name on initialization
-    const [petName, setPetName] = useState(() => {
-        return localStorage.getItem('virtualGeckoName') || '';
-    });
-
+    const [petName, setPetName] = useState(() => localStorage.getItem('virtualGeckoName') || '');
     const [stats, setStats] = useState(INITIAL_STATS);
-    // Position tracking: start right in the center of our 10x10 matrix
     const [position, setPosition] = useState({ x: 5, y: 5 });
     const [isAlive, setIsAlive] = useState(true);
 
-    // 2. The Heartbeat Loop (only runs if a pet has been named and is alive)
     useEffect(() => {
         if (!petName || !isAlive) return;
 
         const heartbeat = setInterval(() => {
             setStats((prev) => {
+                // 1. Calculate cascading conditional states
+                const isStarvingOrCold = prev.food <= 0 || prev.warmth <= 0;
+                const isSickOrBored = prev.health <= 0 || prev.interest <= 0;
+
+                // 2. Determine targeted decay speeds based on conditional rules
+                const currentHealthDecay = isStarvingOrCold ? PENALTIES.CRITICAL_DECAY : DECAY_RATES.health;
+                const currentMoodDecay = isSickOrBored ? PENALTIES.CRITICAL_DECAY : DECAY_RATES.mood;
+
                 const nextStats = {
                     food: Math.max(0, prev.food + DECAY_RATES.food),
-                    interest: Math.max(0, prev.interest + DECAY_RATES.interest),
                     warmth: Math.max(0, prev.warmth + DECAY_RATES.warmth),
+                    interest: Math.max(0, prev.interest + DECAY_RATES.interest),
+                    // Health drops drastically if food or warmth hits 0
+                    health: Math.max(0, prev.health + currentHealthDecay),
+                    // Mood drops drastically if health or interest hits 0
+                    mood: Math.max(0, prev.mood + currentMoodDecay),
                 };
 
-                if (nextStats.food <= 0 || nextStats.interest <= 0 || nextStats.warmth <= 0) {
+                // 3. Complete Game Over Condition check (Zero Health or Zero Mood)
+                if (nextStats.health <= 0 || nextStats.mood <= 0) {
                     setIsAlive(false);
                 }
+
                 return nextStats;
             });
         }, 1000);
@@ -34,7 +42,20 @@ export function useGeckoEngine() {
         return () => clearInterval(heartbeat);
     }, [petName, isAlive]);
 
-    // Action function to register a new lizard name
+    // Position Placement Controller (with Annoyance side effect)
+    const movePet = (newX, newY) => {
+        if (!isAlive) return;
+        
+        // Update matrix position
+        setPosition({ x: newX, y: newY });
+        
+        // Instantly apply the handling mood penalty
+        setStats((prev) => ({
+            ...prev,
+            mood: Math.max(0, prev.mood + PENALTIES.HANDLING_ANNOYANCE)
+        }));
+    };
+
     const registerPetName = (name) => {
         const trimmedName = name.trim();
         if (trimmedName) {
@@ -47,12 +68,12 @@ export function useGeckoEngine() {
         if (!isAlive) return;
         setStats((prev) => {
             switch (actionType) {
-                case 'feed': return { ...prev, food: Math.min(100, prev.food + 15) };
-                case 'play': return { ...prev, interest: Math.min(100, prev.interest + 20) };
+                case 'feed': return { ...prev, food: Math.min(100, prev.food + 15), health: Math.min(100, prev.health + 5) };
+                case 'play': return { ...prev, interest: Math.min(100, prev.interest + 20), mood: Math.min(100, prev.mood + 10) };
                 default: return prev;
             }
         });
     };
 
-    return { petName, stats, position, isAlive, registerPetName, handleAction };
+    return { petName, stats, position, isAlive, registerPetName, handleAction, movePet };
 }

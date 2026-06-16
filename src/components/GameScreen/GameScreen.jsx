@@ -4,7 +4,7 @@ import Dashboard from '../Dashboard/Dashboard';
 import Controls from '../Controls/Controls';
 import './GameScreen.css';
 
-export default function GameScreen({ petName, stats, position, isAlive, onAction }) {
+export default function GameScreen({ petName, stats, position, isAlive, onAction, onMovePet }) {
     
     const handleReset = () => {
         localStorage.clear();
@@ -21,16 +21,15 @@ export default function GameScreen({ petName, stats, position, isAlive, onAction
             <main className="game-screen-viewport">
                 {isAlive ? (
                     <>
-                        <GameBoard position={position} petName={petName} />
+                        {/* Connected our movement function down to the grid */}
+                        <GameBoard position={position} petName={petName} onMovePet={onMovePet} />
                         <Controls onAction={onAction} />
                     </>
                 ) : (
                     <div className="game-screen-grave">
                         <h2>💀 Enclosure Critical Status</h2>
-                        <p>{petName} has left the terrarium due to unmet stat thresholds.</p>
-                        <button onClick={handleReset}>
-                            Incubate New Habitant
-                        </button>
+                        <p>{petName} has passed away due to critical health or mood failure.</p>
+                        <button onClick={handleReset}>Incubate New Habitant</button>
                     </div>
                 )}
             </main>
