@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from 'react';
-import { useGeckoEngine } from './hooks/useGeckoEngine';
+import { useGeckoEngine, movePet } from './hooks/useGeckoEngine';
 import WelcomeScreen from './components/WelcomeScreen/WelcomeScreen';
 import GameScreen from './components/GameScreen/GameScreen';
 
