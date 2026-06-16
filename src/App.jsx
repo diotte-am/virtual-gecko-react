@@ -1,11 +1,11 @@
 // src/App.jsx
 import React from 'react';
-import { useGeckoEngine, movePet } from './hooks/useGeckoEngine';
+import { useGeckoEngine } from './hooks/useGeckoEngine';
 import WelcomeScreen from './components/WelcomeScreen/WelcomeScreen';
 import GameScreen from './components/GameScreen/GameScreen';
 
 export default function App() {
-    const { petName, stats, position, isAlive, registerPetName, handleAction } = useGeckoEngine();
+    const { petName, stats, position, isAlive, registerPetName, handleAction, movePet } = useGeckoEngine();
 
     // If we have no pet name, render the Welcome view
     if (!petName) {
