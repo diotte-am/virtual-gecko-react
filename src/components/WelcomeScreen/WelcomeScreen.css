@@ -1,19 +1,4 @@
-.game-wrapper {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: system-ui, sans-serif;
-}
-
-.game-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 15px;
-}
-
-.modal-overlay {
+.welcome-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -25,7 +10,7 @@
     align-items: center;
 }
 
-.onboarding-card {
+.welcome-card {
     background: white;
     padding: 30px;
     border-radius: 12px;
@@ -34,7 +19,7 @@
     color: #333;
 }
 
-.onboarding-card input {
+.welcome-card input {
     padding: 10px;
     font-size: 1rem;
     border: 2px solid #ccc;
@@ -42,7 +27,7 @@
     margin-right: 10px;
 }
 
-.onboarding-card button {
+.welcome-card button {
     padding: 10px 20px;
     font-size: 1rem;
     background: #4a5d4e;
